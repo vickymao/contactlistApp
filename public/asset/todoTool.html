@@ -1,0 +1,34 @@
+<div ng-controller='TodoCtrl'>
+    <h1>
+        Todo List App
+    </h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>beginning</th>
+                <th>deadline</th>
+                <th>description</th>
+                <th>action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input class='form-control' ng-model='todo.title'></td>
+                <td><input type="date" ng-model="todo.beginning" placeholder="dd-MM-yyyy" required /></td>
+                <td><input type="date" ng-model="todo.deadline" placeholder="dd-MM-yyyy" required /></td>
+                <td><input class='form-control' ng-model='todo.description'></td>
+                <td><button class='btn btn-primary' ng-click='addTodo()'>Add Todo</button></td>
+                <td><button class='btn btn-info' ng-click='update()'>Update</button></td>
+            </tr>
+            <tr ng-repeat="todo in todolist">
+                <td>{{todo.title}}</td>
+                <td>{{todo.beginning}}</td>
+                <td>{{todo.deadline}}</td>
+                <td>{{todo.description}}</td>
+                <td><button class='btn btn-danger' ng-click='remove(todo._id)'>Remove</button></td>
+                <td><button class='btn btn-warning' ng-click='done(todo._id)'>Done</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
