@@ -71,7 +71,9 @@ myApp.controller('TodoCtrl', ['$scope', '$http', function($scope, $http) {
     var refresh = function() {
         $http.get('/todolist').then(function(response) {
             console.log("i got the data i requested");
-            $scope.todolist = response.data;
+            $scope.todolist = response.data.todolist;
+            $scope.donelist = response.data.donelist;
+            console.log(response.data);
             if ($scope.todo) {
                 $scope.todo.title = '';
                 $scope.todo.beginning = '';
@@ -105,21 +107,27 @@ myApp.controller('TodoCtrl', ['$scope', '$http', function($scope, $http) {
         }
 
     };
-    // $scope.edit = function(id) {
-    //     console.log(id);
-    //     $http.get('/contactlist/' + id).then(function(response) {
-    //         console.log(response.data);
-    //         $scope.contact = response.data;
+    $scope.edit = function(id) {
+        console.log(id);
+        $http.get('/todolist/' + id).then(function(response) {
+            console.log(response.data);
+            $scope.todo = response.data;
 
-    //     });
-    // };
+        });
+    };
 
     $scope.update = function() {
-        // console.log($scope.contact._id);
-        // $http.put('/contactlist/' + $scope.contact._id, $scope.contact).then(function(response) {
-        //     console.log(response.data);
-        //     refresh();
-        // });
+        console.log($scope.todo._id);
+        $http.put('/todolist/' + $scope.todo._id, $scope.todo).then(function(response) {
+            console.log(response.data);
+            refresh();
+        });
 
+    };
+
+    $scope.done = function(id) {
+        $http.post('/todolist/done/' + id).then(function(response) {
+            refresh();
+        });
     };
 }]);

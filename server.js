@@ -63,10 +63,16 @@ app.put('/contactlist/:id', function(req, res) {
 });
 app.get('/todolist', function(req, res) {
     console.log("recu un requete GET");
-
+    var data = new Object();
     db.todolist.find(function(err, docs) {
         console.log(docs);
-        res.json(docs);
+        data.todolist = docs;
+        console.log(data.todolist);
+        db.donelist.find(function(err, docs) {
+            data.donelist = docs;
+            console.log(data);
+            res.json(data);
+        });
     });
 });
 app.post('/todolist', function(req, res) {
@@ -80,6 +86,36 @@ app.delete('/todolist/:id', function(req, res) {
     console.log(id);
     db.todolist.remove({ _id: mongojs.ObjectId(id) }, function(err, docs) {
         res.json(docs);
+    });
+});
+app.put('/todolist/:id', function(req, res) {
+    var id = req.params.id;
+    console.log(req.body.name);
+    db.todolist.findAndModify({
+        query: { _id: mongojs.ObjectId(id) },
+        update: { $set: { title: req.body.title, beginning: req.body.beginning, deadline: req.body.deadline, description: req.body.description } },
+        new: true
+    }, function(err, docs) {
+        res.json(docs);
+    });
+});
+app.get('/todolist/:id', function(req, res) {
+    var id = req.params.id;
+    console.log(id);
+    db.todolist.findOne({ _id: mongojs.ObjectId(id) }, function(err, docs) {
+        res.json(docs);
+    });
+});
+app.post('/todolist/done/:id', function(req, res) {
+    var id = req.params.id;
+    console.log(id);
+    db.todolist.findOne({ _id: mongojs.ObjectId(id) }, function(err, docs) {
+        console.log(docs);
+        db.donelist.insert(docs, function(err, doc) {
+            db.todolist.remove({ _id: mongojs.ObjectId(id) }, function(err, docs) {
+                res.json(docs);
+            });
+        });
     });
 });
 app.listen(3000);
